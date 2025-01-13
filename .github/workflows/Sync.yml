@@ -1,0 +1,100 @@
+name: Clone&Push
+
+on:
+  workflow_dispatch:
+
+jobs:
+  clone:
+    runs-on: ubuntu-latest
+    env:
+      git_destination_branch: opencti-newversion        # Nome do branch de destino
+      git_origin_branch: main                           # Branch de origem no repositório OpenCTI
+      git_branch_submodule: opencti-submodule           # Branch para o submódulo
+      git_msg: 'Synchronization of OpenCTI repository'  # Mensagem de commit
+      git_origin_url: https://github.com/OpenCTI-Platform/opencti.git  # URL do repositório OpenCTI
+      git_user_name: Ricardo                            # Seu nome de usuário
+      git_user_email: rpdesignuk@gmail.com                  # Seu e-mail para commit
+    
+    steps:        
+      - name: Checkout the repository
+        uses: actions/checkout@v3.1.0
+  
+      - name: Git delete branch remotely
+        run: |
+          branch_to_delete="${{ env.git_destination_branch }}"
+          if git rev-parse --verify --quiet "refs/heads/${branch_to_delete}"; then
+            git push origin --delete "${branch_to_delete}"
+          else
+            echo "Branch '${branch_to_delete}' does not exist. Continuing..."
+          fi
+
+      - name: Git checkout
+        run: | 
+          git checkout --orphan ${{ env.git_destination_branch }}
+          cp ./opencti/.gitignore .
+          rm -rf opencti
+
+      - name: git config for user
+        run: |
+          git config --global user.email ${{ env.git_user_email }}
+          git config --global user.name ${{ env.git_user_name }}
+
+      - name: git add & commit all new files OpenCTI-newversion
+        run: |
+          git add -A
+          git commit -m "${{ env.git_msg }}"
+
+      - name: Pushing the local "main" branch to the new remote branch in opencti-newversion
+        run: git push -f origin ${{ env.git_destination_branch }}
+
+      - name: Adding OpenCTI repo as a new remote in a branch called "sync"
+        run: git remote add sync ${{ env.git_origin_url }} | cat
+
+      - name: Remove permission to push to OpenCTI repo
+        run: git remote set-url --push sync no_push
+
+      - name: Specifying how to reconcile divergent branches is
+        run: git config pull.rebase false
+
+      - name: Resolve "inexact rename detection was skipped due to too many files" issue
+        run: git config merge.renamelimit 1374
+
+      - name: Pull from the "main" branch in the "sync" remote (The idea behind --allow-unrelated-histories is that git lets you merge unrelated branches. This git flag works seamlessly when there are no file conflicts.) 
+        run: |
+          mkdir opencti
+          git --git-dir=.git --work-tree=opencti pull -X theirs -X rename-threshold=20% sync ${{ env.git_origin_branch }} --allow-unrelated-histories
+
+      - name: Clone submodules Synsharp (if needed for OpenCTI)
+        run: |
+          cd ./opencti
+          rm -rf synsharp
+          git clone https://github.com/ancailliau/SynSharp.git  # Submódulo exemplo
+          rm -r ./SynSharp/.git
+          mv SynSharp synsharp
+
+      - name: Remove docker-image.yml workflow (if applicable to OpenCTI)
+        run: | 
+          cp .gitignore ./opencti
+          rm -rf ./opencti/.github/workflows/docker-image.yml
+
+      - name: git add & commit all new files sync 
+        run: |
+          git add -A
+          git commit -m "${{ env.git_msg }}"
+
+      - name: Setting up a local branch called "github" to track the "sync" remote's "main" branch
+        run: git branch --track github sync/main
+
+      - name: Pushing the local "main" branch to the new remote branch in opencti-newversion
+        run: git push -u origin ${{ env.git_destination_branch }}
+
+      - name: Create new branch opencti-submodule 
+        run: git checkout -b ${{ env.git_branch_submodule }}
+
+      - name: git add & commit all new files opencti-submodule
+        run: |
+          git add -A
+          git commit --allow-empty -m "${{ env.git_msg }}"
+
+      - name: Pushing the local "main" branch to the new remote branch in opencti-newversion
+        run: git push -f origin ${{ env.git_branch_submodule }}
