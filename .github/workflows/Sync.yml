@@ -31,7 +31,7 @@ jobs:
       - name: Git checkout
         run: | 
           git checkout --orphan ${{ env.git_destination_branch }}
-          cp ./opencti/.gitignore .
+          # cp ./opencti/.gitignore .
           rm -rf opencti
 
       - name: git config for user
