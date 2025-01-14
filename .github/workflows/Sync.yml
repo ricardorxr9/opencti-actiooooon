@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       git_destination_branch: opencti-newversion        
-      git_origin_branch: main                           
+      git_origin_branch: develop                           
       git_branch_submodule: opencti-submodule           
       git_msg: 'Synchronization of OpenCTI repository'  
       git_origin_url: https://github.com/OpenCTI-Platform/opencti.git  
@@ -44,7 +44,7 @@ jobs:
           git add -A
           git commit -m "${{ env.git_msg }}"
 
-      - name: Pushing the local "main" branch to the new remote branch in opencti-newversion
+      - name: Pushing the local "develop" branch to the new remote branch in opencti-newversion
         run: git push -f origin ${{ env.git_destination_branch }}
 
       - name: Adding OpenCTI repo as a new remote in a branch called "sync"
@@ -59,33 +59,33 @@ jobs:
       - name: Resolve "inexact rename detection was skipped due to too many files" issue
         run: git config merge.renamelimit 1374
 
-      - name: Pull from the "main" branch in the "sync" remote (The idea behind --allow-unrelated-histories is that git lets you merge unrelated branches. This git flag works seamlessly when there are no file conflicts.) 
+      - name: Pull from the "develop" branch in the "sync" remote (The idea behind --allow-unrelated-histories is that git lets you merge unrelated branches. This git flag works seamlessly when there are no file conflicts.) 
         run: |
           mkdir opencti
           git --git-dir=.git --work-tree=opencti pull -X theirs -X rename-threshold=20% sync ${{ env.git_origin_branch }} --allow-unrelated-histories
 
-      - name: Clone submodules Synsharp (if needed for OpenCTI)
-        run: |
-          cd ./opencti
-          rm -rf synsharp
-          git clone https://github.com/ancailliau/SynSharp.git  
-          rm -r ./SynSharp/.git
-          mv SynSharp synsharp
+      #- name: Clone submodules Synsharp (if needed for OpenCTI)
+       # run: |
+        #  cd ./opencti
+         # rm -rf synsharp
+          #git clone https://github.com/ancailliau/SynSharp.git  
+          #rm -r ./SynSharp/.git
+          #mv SynSharp synsharp
 
-      - name: Remove docker-image.yml workflow (if applicable to OpenCTI)
-        run: | 
-          cp .gitignore ./opencti
-          rm -rf ./opencti/.github/workflows/docker-image.yml
+      #- name: Remove docker-image.yml workflow (if applicable to OpenCTI)
+       # run: | 
+        #  cp .gitignore ./opencti
+         # rm -rf ./opencti/.github/workflows/docker-image.yml
 
       - name: git add & commit all new files sync 
         run: |
           git add -A
           git commit -m "${{ env.git_msg }}"
 
-      - name: Setting up a local branch called "github" to track the "sync" remote's "main" branch
-        run: git branch --track github sync/main
+      - name: Setting up a local branch called "github" to track the "sync" remote's "develop" branch
+        run: git branch --track github sync/develop
 
-      - name: Pushing the local "main" branch to the new remote branch in opencti-newversion
+      - name: Pushing the local "develop" branch to the new remote branch in opencti-newversion
         run: git push -u origin ${{ env.git_destination_branch }}
 
       - name: Create new branch opencti-submodule 
@@ -96,5 +96,5 @@ jobs:
           git add -A
           git commit --allow-empty -m "${{ env.git_msg }}"
 
-      - name: Pushing the local "main" branch to the new remote branch in opencti-newversion
+      - name: Pushing the local "develop" branch to the new remote branch in opencti-newversion
         run: git push -f origin ${{ env.git_branch_submodule }}
