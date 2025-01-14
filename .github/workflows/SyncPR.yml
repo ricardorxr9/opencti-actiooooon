@@ -64,7 +64,6 @@ jobs:
           mkdir opencti
           git --git-dir=.git --work-tree=opencti pull -X theirs -X rename-threshold=20% sync ${{ env.git_origin_branch }} --allow-unrelated-histories
 
-
       - name: git add & commit all new files sync 
         run: |
           git add -A
@@ -92,5 +91,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh auth status
-          gh pr create --base merge --head develop --title "Merge "develop" into "merge" branch" --body "PR Created"
+          gh pr create --base merge --head develop --title "Merge "develop" into "merge" branch" --body "Pull Request created to merge the already developed code with the new public OpenCTI code."
 
