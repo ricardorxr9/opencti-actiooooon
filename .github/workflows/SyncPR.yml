@@ -92,5 +92,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh auth status
-          gh pr create --base develop --head opencti-submodule --title "Merge opencti-submodule into develop" --body "PR Created"
+          gh pr create --base opencti-submodule --head develop --title "Merge develop into opencti-submodule" --body "PR Created"
 
