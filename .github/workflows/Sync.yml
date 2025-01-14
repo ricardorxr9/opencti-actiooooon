@@ -82,10 +82,10 @@ jobs:
           git add -A
           git commit -m "${{ env.git_msg }}"
 
-      - name: Setting up a local branch called "github" to track the "sync" remote's "develop" branch
-        run: git branch --track github sync/develop
+      - name: Setting up a local branch called "github" to track the "sync" remote's "master" branch
+        run: git branch --track github sync/master
 
-      - name: Pushing the local "develop" branch to the new remote branch in opencti-newversion
+      - name: Pushing the local "master" branch to the new remote branch in opencti-newversion
         run: git push -u origin ${{ env.git_destination_branch }}
 
       - name: Create new branch opencti-submodule 
@@ -96,5 +96,5 @@ jobs:
           git add -A
           git commit --allow-empty -m "${{ env.git_msg }}"
 
-      - name: Pushing the local "develop" branch to the new remote branch in opencti-newversion
+      - name: Pushing the local "master" branch to the new remote branch in opencti-newversion
         run: git push -f origin ${{ env.git_branch_submodule }}
