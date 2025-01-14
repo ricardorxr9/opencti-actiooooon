@@ -9,7 +9,7 @@ jobs:
     env:
       git_destination_branch: opencti-newversion        
       git_origin_branch: master                           
-      git_branch_submodule: opencti-submodule           
+      git_branch_submodule: merge         
       git_msg: 'Synchronization of OpenCTI repository'  
       git_origin_url: https://github.com/OpenCTI-Platform/opencti.git  
       git_user_name: Ricardo                            
@@ -76,10 +76,10 @@ jobs:
       - name: Pushing the local "master" branch to the new remote branch in opencti-newversion
         run: git push -u origin ${{ env.git_destination_branch }}
 
-      - name: Create new branch opencti-submodule 
+      - name: Create new branch "merge" 
         run: git checkout -b ${{ env.git_branch_submodule }}
 
-      - name: git add & commit all new files opencti-submodule
+      - name: git add & commit all new files "merge"
         run: |
           git add -A
           git commit --allow-empty -m "${{ env.git_msg }}"
@@ -87,10 +87,10 @@ jobs:
       - name: Pushing the local "master" branch to the new remote branch in opencti-newversion
         run: git push -f origin ${{ env.git_branch_submodule }}
 
-      - name: PR from develop to opencti-submodule
+      - name: PR from "develop" branch to "merge" branch
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh auth status
-          gh pr create --base opencti-submodule --head develop --title "Merge develop into opencti-submodule" --body "PR Created"
+          gh pr create --base merge --head develop --title "Merge "develop" into "merge" branch" --body "PR Created"
 
