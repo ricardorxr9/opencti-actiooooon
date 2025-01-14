@@ -56,9 +56,6 @@ jobs:
       - name: Specifying how to reconcile divergent branches is
         run: git config pull.rebase false
 
-      #- name: Resolve "inexact rename detection was skipped due to too many files" issue
-       # run: git config merge.renamelimit 1374
-
       - name: Pull from the "master" branch in the "sync" remote (The idea behind --allow-unrelated-histories is that git lets you merge unrelated branches. This git flag works seamlessly when there are no file conflicts.) 
         run: |
           mkdir opencti
@@ -85,16 +82,6 @@ jobs:
 
       - name: Pushing the local "master" branch to the new remote branch in opencti-newversion
         run: git push -f origin ${{ env.git_branch_submodule }}
-
-      - name: Find Pull Request
-        uses: juliangruber/find-pull-request-action@v1
-        id: find-pull-request
-        with:
-          branch: develop
-      - run: echo "Pull Request ${number} (${sha})"
-        env:
-          number: ${{ steps.find-pull-request.outputs.number }}
-          sha: ${{ steps.find-pull-request.outputs.head-sha }}
 
       - name: PR from "develop" branch to "merge" branch
         env:
