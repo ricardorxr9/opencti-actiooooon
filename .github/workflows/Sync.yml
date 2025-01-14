@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       git_destination_branch: opencti-newversion        
-      git_origin_branch: develop                           
+      git_origin_branch: master                           
       git_branch_submodule: opencti-submodule           
       git_msg: 'Synchronization of OpenCTI repository'  
       git_origin_url: https://github.com/OpenCTI-Platform/opencti.git  
@@ -59,7 +59,7 @@ jobs:
       - name: Resolve "inexact rename detection was skipped due to too many files" issue
         run: git config merge.renamelimit 1374
 
-      - name: Pull from the "develop" branch in the "sync" remote (The idea behind --allow-unrelated-histories is that git lets you merge unrelated branches. This git flag works seamlessly when there are no file conflicts.) 
+      - name: Pull from the "master" branch in the "sync" remote (The idea behind --allow-unrelated-histories is that git lets you merge unrelated branches. This git flag works seamlessly when there are no file conflicts.) 
         run: |
           mkdir opencti
           git --git-dir=.git --work-tree=opencti pull -X theirs -X rename-threshold=20% sync ${{ env.git_origin_branch }} --allow-unrelated-histories
