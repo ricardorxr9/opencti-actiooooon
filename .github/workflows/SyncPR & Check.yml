@@ -1,4 +1,4 @@
-name: Clone&Push & PR
+name: Clone&Push & PR Check
 
 on:
   workflow_dispatch:
@@ -90,7 +90,7 @@ jobs:
         uses: juliangruber/find-pull-request-action@v1
         id: find-pull-request
         with:
-          branch: merge
+          branch: develop
       - run: echo "Pull Request ${number} (${sha})"
         env:
           number: ${{ steps.find-pull-request.outputs.number }}
