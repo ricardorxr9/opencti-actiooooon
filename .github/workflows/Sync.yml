@@ -7,13 +7,13 @@ jobs:
   clone:
     runs-on: ubuntu-latest
     env:
-      git_destination_branch: opencti-newversion        # Nome do branch de destino
-      git_origin_branch: main                           # Branch de origem no repositório OpenCTI
-      git_branch_submodule: opencti-submodule           # Branch para o submódulo
-      git_msg: 'Synchronization of OpenCTI repository'  # Mensagem de commit
-      git_origin_url: https://github.com/OpenCTI-Platform/opencti.git  # URL do repositório OpenCTI
-      git_user_name: Ricardo                            # Seu nome de usuário
-      git_user_email: rpdesignuk@gmail.com                  # Seu e-mail para commit
+      git_destination_branch: opencti-newversion        
+      git_origin_branch: main                           
+      git_branch_submodule: opencti-submodule           
+      git_msg: 'Synchronization of OpenCTI repository'  
+      git_origin_url: https://github.com/OpenCTI-Platform/opencti.git  
+      git_user_name: Ricardo                            
+      git_user_email: rpdesignuk@gmail.com                  
     
     steps:        
       - name: Checkout the repository
@@ -68,7 +68,7 @@ jobs:
         run: |
           cd ./opencti
           rm -rf synsharp
-          git clone https://github.com/ancailliau/SynSharp.git  # Submódulo exemplo
+          git clone https://github.com/ancailliau/SynSharp.git  
           rm -r ./SynSharp/.git
           mv SynSharp synsharp
 
