@@ -56,8 +56,8 @@ jobs:
       - name: Specifying how to reconcile divergent branches is
         run: git config pull.rebase false
 
-      - name: Resolve "inexact rename detection was skipped due to too many files" issue
-        run: git config merge.renamelimit 1374
+      #- name: Resolve "inexact rename detection was skipped due to too many files" issue
+       # run: git config merge.renamelimit 1374
 
       - name: Pull from the "master" branch in the "sync" remote (The idea behind --allow-unrelated-histories is that git lets you merge unrelated branches. This git flag works seamlessly when there are no file conflicts.) 
         run: |
