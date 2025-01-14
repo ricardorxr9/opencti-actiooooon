@@ -88,6 +88,8 @@ jobs:
         run: git push -f origin ${{ env.git_branch_submodule }}
 
       - name: PR from develop to opencti-submodule
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh auth login \
           gh pr create --base develop --head opencti-submodule --title "Merge opencti-submodule into develop" --body "PR Created"
