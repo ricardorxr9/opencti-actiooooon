@@ -88,5 +88,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh auth status
-          gh pr create --base merge --head develop --title "Merge "develop" into "merge" branch" --body "Pull Request created to merge the already developed code with the new public OpenCTI code."
+          gh pr create --base develop --head merge --title "Merge "develop" into "merge" branch" --body "Pull Request created to merge the already developed code with the new public OpenCTI code."
 
