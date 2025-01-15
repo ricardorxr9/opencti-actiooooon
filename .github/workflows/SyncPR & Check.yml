@@ -1,4 +1,4 @@
-name: Clone&Push & PR Check
+name: Clone&Push&PR 
 
 on:
   workflow_dispatch:
@@ -31,8 +31,6 @@ jobs:
       - name: Git checkout
         run: | 
           git checkout --orphan ${{ env.git_destination_branch }}
-          # cp ./opencti/.gitignore .
-          rm -rf opencti
 
       - name: git config for user
         run: |
@@ -42,7 +40,7 @@ jobs:
       - name: git add & commit all new files OpenCTI-newversion
         run: |
           git add -A
-          git commit -m "${{ env.git_msg }}"
+          git commit --allow-empty -m "${{ env.git_msg }}"
 
       - name: Pushing the local "develop" branch to the new remote branch in opencti-newversion
         run: git push -f origin ${{ env.git_destination_branch }}
@@ -64,7 +62,7 @@ jobs:
       - name: git add & commit all new files sync 
         run: |
           git add -A
-          git commit -m "${{ env.git_msg }}"
+          git commit --allow-empty -m "${{ env.git_msg }}"
 
       - name: Setting up a local branch called "github" to track the "sync" remote's "master" branch
         run: git branch --track github sync/master
@@ -83,10 +81,10 @@ jobs:
       - name: Pushing the local "master" branch to the new remote branch in opencti-newversion
         run: git push -f origin ${{ env.git_branch_submodule }}
 
-      - name: PR from "develop" branch to "merge" branch
+      - name: PR from "merge" branch to "develop" branch
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh auth status
-          gh pr create --base develop --head merge --title "Merge "develop" into "merge" branch" --body "Pull Request created to merge the already developed code with the new public OpenCTI code."
+          gh pr create --base develop --head merge --title "Merge code from "merge" branch into "develop" branch" --body "Pull Request created to merge the already developed code with the new public OpenCTI code."
 
